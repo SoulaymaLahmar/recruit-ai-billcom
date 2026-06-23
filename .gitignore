@@ -1,0 +1,11 @@
+# Virtual environment
+backend/venv/
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Env files
+.env
