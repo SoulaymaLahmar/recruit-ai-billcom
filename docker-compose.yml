@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:15
+    container_name: recrut_db
+    environment:
+      POSTGRES_USER: recrut
+      POSTGRES_PASSWORD: recrut123
+      POSTGRES_DB: recrut_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: ./backend
+    container_name: recrut_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://recrut:recrut123@db:5432/recrut_db
+    volumes:
+      - ./backend:/app
+
+volumes:
+  pgdata:
