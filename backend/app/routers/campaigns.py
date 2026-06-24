@@ -1,15 +1,37 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models.models import Campaign
-from app.schemas.schemas import CampaignCreate, CampaignResponse
+
+print("DEBUG: campaigns.py - importing dependencies")
+try:
+    from app.database import get_db
+    print("DEBUG: campaigns.py - get_db imported")
+except Exception as e:
+    print(f"ERROR: campaigns.py - failed to import get_db: {e}")
+    raise
+
+try:
+    from app.models.models import Campaign
+    print("DEBUG: campaigns.py - Campaign imported")
+except Exception as e:
+    print(f"ERROR: campaigns.py - failed to import Campaign: {e}")
+    raise
+
+try:
+    from app.schemas.schemas import CampaignCreate, CampaignResponse
+    print("DEBUG: campaigns.py - schemas imported")
+except Exception as e:
+    print(f"ERROR: campaigns.py - failed to import schemas: {e}")
+    raise
+
 from typing import List
 from uuid import UUID
 
+print("DEBUG: campaigns.py - creating router")
 router = APIRouter(
     prefix="/campaigns",
     tags=["Campaigns"]
 )
+print("DEBUG: campaigns.py - router created successfully")
 
 
 # GET /campaigns 

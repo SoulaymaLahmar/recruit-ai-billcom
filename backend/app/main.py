@@ -1,16 +1,18 @@
 from fastapi import FastAPI
 from app.database import engine, Base
 from app.models import models
-from app.routers import campaigns, candidates
+from app.routers import campaigns, candidates, users, scores, recommendations, auth
 
-# Crée toutes les tables automatiquement au démarrage
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="RecrutIA API", version="1.0.0")
 
-# les routers 
+app.include_router(auth.router)
 app.include_router(campaigns.router)
 app.include_router(candidates.router)
+app.include_router(users.router)
+app.include_router(scores.router)
+app.include_router(recommendations.router)
 
 @app.get("/")
 def root():

@@ -61,3 +61,43 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# SCHEMAS SCORE
+
+class ScoreResponse(BaseModel):
+    id: UUID
+    candidate_id: UUID
+    campaign_id: UUID
+    skill_score: int
+    experience_score: int
+    education_score: int
+    final_score: int
+
+    class Config:
+        from_attributes = True
+
+# SCHEMAS RECOMMENDATION
+
+class RecommendationResponse(BaseModel):
+    id: UUID
+    candidate_id: UUID
+    campaign_id: UUID
+    recommendation: Optional[str]
+    reason: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+# SCHEMAS AUTH 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user_name: str
+    user_role: str
+
+    
