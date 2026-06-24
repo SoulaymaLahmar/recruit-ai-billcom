@@ -1,83 +1,83 @@
-from sqlalchemy import Column, String, Integer, Text, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, TIMESTAMP, Boolean
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship 
 from app.database import Base
 import uuid
-from datetime import datetime
+from datetime import datetime 
 
-# ─── TABLE USERS ───────────────────────────────────────
+
+# table 1 = users
+
 class User(Base):
     __tablename__ = "users"
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
+    name = Column(String, nullable = False)
+    email = Column (String, unique = True, nullable = False)
+    password_hash = Column(String, nullable = False)
+    role = Column(String, default = "recruiter")
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=False)
-    password_hash = Column(String, nullable=False)
-    role = Column(String, default="recruiter")
 
-# ─── TABLE CAMPAIGNS ───────────────────────────────────
+# table 2 = campaigns : les offres d'emploi
+
 class Campaign(Base):
     __tablename__ = "campaigns"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, nullable=False)
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
+    title = Column(String, nullable = False)
     description = Column(Text)
     required_skills = Column(JSONB)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
-
     scores = relationship("CandidateScore", back_populates="campaign")
     recommendations = relationship("Recommendation", back_populates="campaign")
 
-# ─── TABLE CANDIDATES ──────────────────────────────────
+# table 3 = candidates 
+
 class Candidate(Base):
     __tablename__ = "candidates"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True)
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
+    name = Column(String, nullable = False)
+    email = Column(String, unique = True)
     phone = Column(String)
     education = Column(Text)
-    experience_years = Column(Integer, default=0)
-    cv_path = Column(String)
-
+    experience_years = Column(Integer, default = 0)
+    resume_url = Column(String)
     skills = relationship("CandidateSkill", back_populates="candidate")
     scores = relationship("CandidateScore", back_populates="candidate")
     recommendations = relationship("Recommendation", back_populates="candidate")
 
-# ─── TABLE CANDIDATE_SKILLS ────────────────────────────
+# table 4 = candidate_skills : les compétences des candidats extraites de leur CV
+
 class CandidateSkill(Base):
     __tablename__ = "candidate_skills"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"))
-    skill_name = Column(String, nullable=False)
-
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
+    candidate_id = Column(UUID(as_uuid = True), ForeignKey("candidates.id"))
+    skill_name = Column(String, nullable = False)
     candidate = relationship("Candidate", back_populates="skills")
 
-# ─── TABLE CANDIDATE_SCORES ────────────────────────────
+# table 5 = candidate_scores : les scores des candidats calculés par l'IA
+
 class CandidateScore(Base):
     __tablename__ = "candidate_scores"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"))
-    campaign_id = Column(UUID(as_uuid=True), ForeignKey("campaigns.id"))
-    skill_score = Column(Integer, default=0)
-    experience_score = Column(Integer, default=0)
-    education_score = Column(Integer, default=0)
-    final_score = Column(Integer, default=0)
-
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
+    candidate_id = Column(UUID(as_uuid = True), ForeignKey("candidates.id"))
+    campaign_id = Column(UUID(as_uuid = True), ForeignKey("campaigns.id"))
+    skill_score = Column(Integer, default = 0)
+    experience_score = Column(Integer, default = 0)
+    education_score = Column(Integer, default = 0)
+    final_score = Column(Integer, default = 0)
     candidate = relationship("Candidate", back_populates="scores")
     campaign = relationship("Campaign", back_populates="scores")
 
-# ─── TABLE RECOMMENDATIONS ─────────────────────────────
+# table 6 = recommendations : les recommandations de l'IA pour chaque candidat et chaque campagne
+
 class Recommendation(Base):
     __tablename__ = "recommendations"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"))
-    campaign_id = Column(UUID(as_uuid=True), ForeignKey("campaigns.id"))
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
+    candidate_id = Column(UUID(as_uuid = True), ForeignKey("candidates.id"))
+    campaign_id = Column(UUID(as_uuid = True), ForeignKey("campaigns.id"))
     recommendation = Column(String)
     reason = Column(Text)
 
     candidate = relationship("Candidate", back_populates="recommendations")
-    campaign = relationship("Campaign", back_populates="recommendations")
+    campaign  = relationship("Campaign",  back_populates="recommendations")
+
+
