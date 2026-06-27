@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 services:
 
@@ -25,6 +25,7 @@ services:
       DATABASE_URL: postgresql://recrut:recrut123@db:5432/recrut_db
     volumes:
       - ./backend:/app
+      - ./backend/uploads:/app/uploads      ← nouveau
 
 volumes:
   pgdata:

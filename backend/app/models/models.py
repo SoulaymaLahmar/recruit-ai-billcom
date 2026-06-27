@@ -39,7 +39,7 @@ class Candidate(Base):
     phone = Column(String)
     education = Column(Text)
     experience_years = Column(Integer, default = 0)
-    resume_url = Column(String)
+    cv_path = Column(String)
     skills = relationship("CandidateSkill", back_populates="candidate")
     scores = relationship("CandidateScore", back_populates="candidate")
     recommendations = relationship("Recommendation", back_populates="candidate")
