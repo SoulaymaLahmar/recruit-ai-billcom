@@ -52,6 +52,7 @@ class UserCreate(BaseModel):
     name: str
     email: str
     password: str
+    role: str = "recruiter"
 
 class UserResponse(BaseModel):
     id: UUID
@@ -100,4 +101,3 @@ class TokenResponse(BaseModel):
     user_name: str
     user_role: str
 
-    

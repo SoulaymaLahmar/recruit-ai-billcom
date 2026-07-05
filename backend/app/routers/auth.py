@@ -16,15 +16,13 @@ router = APIRouter(
 def register(user: UserCreate, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.email == user.email).first()
     if existing:
-        raise HTTPException(
-            status_code=400,
-            detail="Un utilisateur avec cet email existe déjà"
-        )
+        raise HTTPException(status_code=400, detail="Email déjà utilisé")
+    
     new_user = User(
         name=user.name,
         email=user.email,
         password_hash=hash_password(user.password),
-        role="recruiter"
+        role=user.role    # ← utiliser le rôle envoyé
     )
     db.add(new_user)
     db.commit()
@@ -50,5 +48,5 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
         "access_token": token,
         "token_type": "bearer",
         "user_name": user.name,
-        "user_role": user.role
+        "user_role": user.role    # ← retourner le rôle
     }

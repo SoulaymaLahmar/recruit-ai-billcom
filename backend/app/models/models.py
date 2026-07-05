@@ -81,3 +81,17 @@ class Recommendation(Base):
     campaign  = relationship("Campaign",  back_populates="recommendations")
 
 
+# TABLE 7 : APPLICATIONS
+# Les candidatures déposées
+class Application(Base):
+    __tablename__ = "applications"
+
+    id           = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"))
+    campaign_id  = Column(UUID(as_uuid=True), ForeignKey("campaigns.id"))
+    status       = Column(String, default="En attente")
+    applied_at   = Column(TIMESTAMP, default=datetime.utcnow)
+    cv_path      = Column(String)
+
+    candidate = relationship("Candidate", backref="applications")
+    campaign  = relationship("Campaign", backref="applications")
