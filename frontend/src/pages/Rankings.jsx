@@ -323,52 +323,119 @@ export default function Rankings() {
             ))}
           </Box>
 
-          {/* ── Liste ── */}
-          <Box sx={{ bgcolor: '#fff', borderRadius: '16px', border: '1px solid rgba(17,20,24,0.07)', overflow: 'hidden' }}>
-            <AnimatePresence>
-              {rankings.map((r, i) => {
-                const status = getStatus(r.final_score);
-                const rankStyle = getRankStyle(r.rank);
-                const emailStatus = emailStatuses[r.candidate_id] || 'idle';
-                return (
-                  <motion.div key={r.candidate_id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                    <Box sx={{
-                      display: 'flex', alignItems: 'center', gap: 2, p: 2.5,
-                      borderBottom: i < rankings.length - 1 ? '1px solid rgba(17,20,24,0.05)' : 'none',
-                      bgcolor: r.rank <= 3 ? 'rgba(255,121,0,0.02)' : 'transparent',
-                      transition: 'background 0.15s',
-                      '&:hover': { bgcolor: 'rgba(255,121,0,0.04)' },
-                    }}>
-                      <Box sx={{ width: 36, height: 36, borderRadius: '10px', background: rankStyle.bg, color: rankStyle.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, flexShrink: 0 }}>
-                        {rankStyle.icon || `#${r.rank}`}
-                      </Box>
-                      <Avatar sx={{ width: 38, height: 38, bgcolor: 'rgba(255,121,0,0.10)', color: '#FF7900', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
-                        {getInitials(r.candidate_name)}
-                      </Avatar>
-                      <Box sx={{ minWidth: 160 }}>
-                        <Typography sx={{ fontWeight: 700, fontSize: 14, color: '#111418' }}>{r.candidate_name}</Typography>
-                        {r.candidate_email && (
-                          <Typography sx={{ fontSize: 11, color: '#9aa3b2' }}>{r.candidate_email}</Typography>
-                        )}
-                      </Box>
-                      <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 3, flex: 1, maxWidth: 380 }}>
-                        <SubScore icon={<Target size={12} />} label="Compétences" value={r.skill_score} max={60} />
-                        <SubScore icon={<Briefcase size={12} />} label="Expérience" value={r.experience_score} max={20} />
-                        <SubScore icon={<GraduationCap size={12} />} label="Éducation" value={r.education_score} max={20} />
-                      </Box>
-                      <Box sx={{ flex: 1 }} />
-                      <Box sx={{ textAlign: 'right', minWidth: 60 }}>
-                        <Typography sx={{ fontSize: 22, fontWeight: 800, color: status.color, lineHeight: 1 }}>{r.final_score}</Typography>
-                        <Typography sx={{ fontSize: 10, color: '#9aa3b2' }}>/100</Typography>
-                      </Box>
-                      <Chip label={status.label} size="small" sx={{ bgcolor: status.bg, color: status.color, fontWeight: 700, fontSize: 11.5, minWidth: 160, display: { xs: 'none', md: 'flex' } }} />
-                      <EmailAction status={emailStatus} onPreview={() => openPreview(r)} />
-                    </Box>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+         {/* ── Liste ── */}
+<Box sx={{ bgcolor: '#fff', borderRadius: '16px', border: '1px solid rgba(17,20,24,0.07)', overflow: 'hidden' }}>
+  <AnimatePresence>
+    {rankings.map((r, i) => {
+      const status    = getStatus(r.final_score);
+      const rankStyle = getRankStyle(r.rank);
+      const emailStatus = emailStatuses[r.candidate_id] || 'idle';
+      return (
+        <motion.div
+          key={r.candidate_id}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: i * 0.05 }}
+        >
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.5,
+            p: { xs: 1.5, md: 2 },
+            borderBottom: i < rankings.length - 1 ? '1px solid rgba(17,20,24,0.05)' : 'none',
+            bgcolor: r.rank <= 3 ? 'rgba(255,121,0,0.02)' : 'transparent',
+            transition: 'background 0.15s',
+            '&:hover': { bgcolor: 'rgba(255,121,0,0.04)' },
+          }}>
+
+            {/* Rang */}
+            <Box sx={{
+              width: 34, height: 34, borderRadius: '10px',
+              background: rankStyle.bg, color: rankStyle.color,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 800, fontSize: 13, flexShrink: 0,
+            }}>
+              {rankStyle.icon || `#${r.rank}`}
+            </Box>
+
+            {/* Avatar */}
+            <Avatar sx={{
+              width: 34, height: 34,
+              bgcolor: 'rgba(255,121,0,0.10)', color: '#FF7900',
+              fontWeight: 700, fontSize: 12, flexShrink: 0,
+            }}>
+              {getInitials(r.candidate_name)}
+            </Avatar>
+
+            {/* Nom + email — largeur fixe */}
+            <Box sx={{ width: { xs: 120, sm: 160, md: 180 }, flexShrink: 0 }}>
+              <Typography sx={{
+                fontWeight: 700, fontSize: 13.5, color: '#111418',
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}>
+                {r.candidate_name}
+              </Typography>
+              {r.candidate_email && (
+                <Typography sx={{
+                  fontSize: 11, color: '#9aa3b2',
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                }}>
+                  {r.candidate_email}
+                </Typography>
+              )}
+            </Box>
+
+            {/* Sub-scores — cachés sur petit écran */}
+            <Box sx={{
+              display: { xs: 'none', lg: 'flex' },
+              gap: 2, flex: 1,
+            }}>
+              <SubScore icon={<Target size={12} />}      label="Compétences" value={r.skill_score}      max={60} />
+              <SubScore icon={<Briefcase size={12} />}   label="Expérience"  value={r.experience_score} max={20} />
+              <SubScore icon={<GraduationCap size={12} />} label="Éducation" value={r.education_score}  max={20} />
+            </Box>
+
+            {/* Spacer */}
+            <Box sx={{ flex: 1 }} />
+
+            {/* Score final */}
+            <Box sx={{ textAlign: 'right', flexShrink: 0, minWidth: 48 }}>
+              <Typography sx={{
+                fontSize: { xs: 18, md: 22 },
+                fontWeight: 800, color: status.color, lineHeight: 1,
+              }}>
+                {r.final_score}
+              </Typography>
+              <Typography sx={{ fontSize: 10, color: '#9aa3b2' }}>/100</Typography>
+            </Box>
+
+            {/* Status chip — caché sur xs */}
+            <Chip
+              label={status.label}
+              size="small"
+              sx={{
+                bgcolor: status.bg, color: status.color,
+                fontWeight: 700, fontSize: 11,
+                flexShrink: 0,
+                display: { xs: 'none', sm: 'flex' },
+                maxWidth: { sm: 120, md: 160 },
+              }}
+            />
+
+            {/* Email action — TOUJOURS visible */}
+            <Box sx={{ flexShrink: 0 }}>
+              <EmailAction
+                status={emailStatus}
+                onPreview={() => openPreview(r)}
+              />
+            </Box>
+
           </Box>
+        </motion.div>
+      );
+    })}
+  </AnimatePresence>
+</Box>
         </>
       )}
 
